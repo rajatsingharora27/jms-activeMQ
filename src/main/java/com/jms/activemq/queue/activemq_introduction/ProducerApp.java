@@ -14,10 +14,10 @@ public class ProducerApp {
 	public static void main(String[] args) throws JMSException {
 
 		ActiveMQConnectionFactory brokerConnectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61616");
-		Connection connection=null;
-		Session session=null;
+		Connection connection = null;
+		Session session = null;
 		try {
-			 connection = brokerConnectionFactory.createConnection();
+			connection = brokerConnectionFactory.createConnection();
 			System.out.println("Connection to activemq is successful");
 
 			// create Session
@@ -25,7 +25,7 @@ public class ProducerApp {
 			 * to create a produer , cosumer
 			 */
 
-			 session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+			session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
 			// create queue will create a queue in broker
 			// if the queue with the passed name is not present in the broker
@@ -37,18 +37,20 @@ public class ProducerApp {
 
 			MessageProducer producer = session.createProducer(queue);
 
-			TextMessage textMessage = session
-					.createTextMessage("This is the first message sent from producer to queue");
+			String[] message = new String[6];
 
-			producer.send(textMessage);
-
+			for (int i = 0; i < message.length; i++) {
+				message[i] = "This is message number" + i;
+				TextMessage textMessage = session.createTextMessage(message[i]);
+				producer.send(textMessage);
+			}
 			System.out.println("Message has been sent to queue");
 
 		} catch (JMSException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}finally {
-			if(session!=null && connection!=null) {
+		} finally {
+			if (session != null && connection != null) {
 				connection.close();
 			}
 		}
